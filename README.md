@@ -47,3 +47,17 @@
             e.printStackTrace();
         }
 ```
+
+## Input from Console
+
+#### By scanner
+
+```
+Scanner scanner = new Scanner(System.in);
+```
+
+#### by BufferedReader
+
+```
+BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+```
