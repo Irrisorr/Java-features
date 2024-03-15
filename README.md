@@ -48,6 +48,23 @@
         }
 ```
 
+### Lines are readen from file that full path was submitted in variable and are added in ArrayList
+```
+public static List<String> lines = new ArrayList<String>();
+
+    static {
+        try(BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))){
+            String line;
+            while (reader.ready()){
+                line = reader.readLine();
+                lines.add(line);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+```
+
 ## Input from Console
 
 #### By scanner
