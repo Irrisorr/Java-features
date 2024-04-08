@@ -1,30 +1,38 @@
-// 
-
 import java.io.*;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.stream.IntStream;
+import java.nio.charset.StandardCharsets;
 
 public class Main {
     public static void main(String[] args) {
-
         try {
             BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
             File file = new File(bf.readLine());
             FileInputStream fis = new FileInputStream(file);
             FileOutputStream fos = new FileOutputStream(bf.readLine());
 
-//            String fileType;
-//            byte[] bytes = fis.readAllBytes();
-//            boolean hasBinary = IntStream.range(0, bytes.length)
-//                    .map(i -> Byte.toUnsignedInt(bytes[i]))
-//                    .anyMatch(b -> b > 127);
-//
-//            if (hasBinary) {
-//                fileType = "Binary";
-//            } else {
-//                fileType = "Text";
-//            }
+            String fileType;
+            byte[] buffer = new byte[4096];
+
+            int bytesRead = fis.read(buffer);
+            if (bytesRead == -1) {
+                fileType = "Empty file";
+            } else {
+                boolean isText = true;
+                for (int i = 0; i < bytesRead - 1; i++) {
+                    byte b1 = buffer[i];
+                    byte b2 = buffer[i + 1];
+
+                    if ((b1 == 0 && b2 != 0) || (b1 != 0 && b2 == 0)) {
+                        isText = false;
+                        break;
+                    }
+                }
+
+                if (isText) {
+                    fileType = "Text file (Unicode)";
+                } else {
+                    fileType = "Binary file";
+                }
+            }
 
             String fileNameToFO =
                     String.format("Name of input file: %s\nFile size: %d (bytes)\nFile type: %s",
@@ -41,6 +49,5 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
