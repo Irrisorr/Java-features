@@ -34,7 +34,7 @@ public class Test {
             int c;
             while ((c = bufferedReader.read()) != -1) {
                 //обработка того что может быть два раза подряд новая строка
-                if (!Character.isLetterOrDigit(c)) {
+                if (Character.isWhitespace(c) || Character.isISOControl(c)) {
                     isNewWord = true;
                     continue;
                 }
