@@ -11,10 +11,14 @@ public class Test {
 
     public static void main(String[] args) {
         try {
-            File fileIn = new File("/home/irrisorr/Desktop/Java-features/Sergey_tasks/FI.txt");
-            File fileOut = new File("/home/irrisorr/Desktop/Java-features/Sergey_tasks/FO.txt");
+            File fileIn = new File("/home/irrisorr/Desktop/Java-features/Sergey_tasks/mysort");
+            String outputFileName = fileIn.getName() + ".stat";
+            File fileOut = new File("/home/irrisorr/Desktop/Java-features/Sergey_tasks/" + outputFileName);
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fileIn));
             FileWriter fileWriter = new FileWriter(fileOut);
+
+            // 4 Processing time
+            long startTime = System.currentTimeMillis(); // Время начала обработки файла
 
             // 1.1 Full fileName
             String fullFileName = fileIn.getName();
@@ -79,7 +83,7 @@ public class Test {
             }
 
             // 3. Статистика повторения слов
-            fileNameToFO += "\n\nWord repetition statistics:\n";
+            fileNameToFO += "\nWord repetition statistics:\n";
             fileNameToFO += String.format("%-20s%-10s%-10s\n", "Word", "Quantity", "Prob. %");
             List<Map.Entry<String, Integer>> sortedWords = new ArrayList<>(wordCount.entrySet());
             sortedWords.sort(Map.Entry.<String, Integer>comparingByValue().reversed());
@@ -88,6 +92,9 @@ public class Test {
                 double percentage = (double) entry.getValue() / totalWords * 100;
                 fileNameToFO += String.format("%-20s%-10d%-10.2f\n", entry.getKey(), entry.getValue(), percentage);
             }
+            long endTime = System.currentTimeMillis();
+            long duration = endTime - startTime;
+            fileNameToFO += String.format("\nProcessing time: %d (msec)\n", duration);
 
             fileWriter.write(fileNameToFO);
 
