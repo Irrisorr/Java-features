@@ -11,14 +11,26 @@ public class Test {
 
     public static void main(String[] args) {
         try {
-            File fileIn = new File("/home/irrisorr/Desktop/Java-features/Sergey_tasks/mysort");
+            File fileIn = new File("/home/irrisorr/Desktop/Java-features/Sergey_tasks/FI.txt");
             String outputFileName = fileIn.getName() + ".stat";
             File fileOut = new File("/home/irrisorr/Desktop/Java-features/Sergey_tasks/" + outputFileName);
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fileIn));
             FileWriter fileWriter = new FileWriter(fileOut);
 
+            String fileNameToFO = processFile(fileIn, bufferedReader);
+
+            fileWriter.write(fileNameToFO);
+
+            bufferedReader.close();
+            fileWriter.close();
+        } catch (Exception e) {}
+
+    }
+
+
+    private static String processFile(File fileIn, BufferedReader bufferedReader) throws IOException {
             // 4 Processing time
-            long startTime = System.currentTimeMillis(); // Время начала обработки файла
+            long startTime = System.currentTimeMillis();
 
             // 1.1 Full fileName
             String fullFileName = fileIn.getName();
@@ -96,11 +108,7 @@ public class Test {
             long duration = endTime - startTime;
             fileNameToFO += String.format("\nProcessing time: %d (msec)\n", duration);
 
-            fileWriter.write(fileNameToFO);
-
-            bufferedReader.close();
-            fileWriter.close();
-        } catch (Exception e) {}
+            return fileNameToFO;
     }
 
 
