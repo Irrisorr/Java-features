@@ -3,6 +3,9 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Test {
 
@@ -32,6 +35,7 @@ public class Test {
             int totalWords = 0;
             boolean isNewWord = true;
             int c;
+            Map<Character, Integer> charCount = new HashMap<>();
             while ((c = bufferedReader.read()) != -1) {
                 //обработка того что может быть два раза подряд новая строка
                 if (Character.isWhitespace(c) || Character.isISOControl(c)) {
@@ -44,12 +48,23 @@ public class Test {
                     totalWords++;
                 }
 
+                char ch = (char) c;
+                charCount.put(ch, charCount.getOrDefault(ch, 0) + 1);
                 totalChars++;
             }
+            //2 Character repetition statistics
+            List<Map.Entry<Character, Integer>> sortedChars = new ArrayList<>(charCount.entrySet());
+            sortedChars.sort(Map.Entry.<Character, Integer>comparingByValue().reversed());
 
-            String fileNameToFO =
-                    String.format("Name of input file: %s\nFile size: %d (bytes)\nFile type: %s\nTotal chars: %d\nTotal words: %d",
-                            fullFileName, fileSize, fileType, totalChars, totalWords);
+            String fileNameToFO = String.format("Name of input file: %s\nFile size: %d (bytes)\nFile type: %s\nTotal chars: %d\nTotal words: %d\n\n" +
+                            "Character repetition statistics:\n%-10s%-10s%-10s\n",
+                    fullFileName, fileSize, fileType, totalChars, totalWords, "Char", "Quantity", "Prob. %");
+
+
+            for (Map.Entry<Character, Integer> entry : sortedChars) {
+                double percentage = (double) entry.getValue() / totalChars * 100;
+                fileNameToFO += String.format("%-10c%-10d%-10.3f\n", entry.getKey(), entry.getValue(), percentage);
+            }
 
             fileWriter.write(fileNameToFO);
 
