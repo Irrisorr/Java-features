@@ -33,9 +33,11 @@ public class Test {
             // 1.4-5 Total words and chars
             int totalChars = 0;
             int totalWords = 0;
-            boolean isNewWord = true;
+            boolean isNewWord = false;
             int c;
             Map<Character, Integer> charCount = new HashMap<>();
+            StringBuilder sb = new StringBuilder("");
+            Map<String, Integer> wordCount = new HashMap<>();
             while ((c = bufferedReader.read()) != -1) {
                 //обработка того что может быть два раза подряд новая строка
                 if (Character.isWhitespace(c) || Character.isISOControl(c)) {
@@ -44,14 +46,24 @@ public class Test {
                 }
 
                 if (isNewWord) {
+                    wordCount.put(sb.toString(), wordCount.getOrDefault(sb.toString(), 0) + 1);
+                    sb = new StringBuilder("");
                     isNewWord = false;
                     totalWords++;
                 }
 
                 char ch = (char) c;
+                sb.append(ch);
                 charCount.put(ch, charCount.getOrDefault(ch, 0) + 1);
                 totalChars++;
             }
+            // добавление последнего слова
+            if (sb.length() > 0) {
+                String word = sb.toString();
+                wordCount.put(word, wordCount.getOrDefault(word, 0) + 1);
+                totalWords++;
+            }
+
             //2 Character repetition statistics
             List<Map.Entry<Character, Integer>> sortedChars = new ArrayList<>(charCount.entrySet());
             sortedChars.sort(Map.Entry.<Character, Integer>comparingByValue().reversed());
@@ -64,6 +76,17 @@ public class Test {
             for (Map.Entry<Character, Integer> entry : sortedChars) {
                 double percentage = (double) entry.getValue() / totalChars * 100;
                 fileNameToFO += String.format("%-10c%-10d%-10.3f\n", entry.getKey(), entry.getValue(), percentage);
+            }
+
+            // 3. Статистика повторения слов
+            fileNameToFO += "\n\nWord repetition statistics:\n";
+            fileNameToFO += String.format("%-20s%-10s%-10s\n", "Word", "Quantity", "Prob. %");
+            List<Map.Entry<String, Integer>> sortedWords = new ArrayList<>(wordCount.entrySet());
+            sortedWords.sort(Map.Entry.<String, Integer>comparingByValue().reversed());
+
+            for (Map.Entry<String, Integer> entry : sortedWords) {
+                double percentage = (double) entry.getValue() / totalWords * 100;
+                fileNameToFO += String.format("%-20s%-10d%-10.2f\n", entry.getKey(), entry.getValue(), percentage);
             }
 
             fileWriter.write(fileNameToFO);
