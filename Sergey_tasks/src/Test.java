@@ -10,28 +10,28 @@ import java.util.Map;
 public class Test {
 
     public static void main(String[] args) {
-            String filePath = null;
-            String mask = null;
+        String filePath = null;
+        String mask = null;
 
-            for (int i = 0; i < args.length; i++) {
-                if (args[i].startsWith("-mask-")) {
-                    mask = args[i].substring(6);
-                } else {
-                    filePath = args[i];
-                }
-            }
-
-            if (filePath == null) {
-                System.out.println("Usage: file/directory [-mask-[mask]]");
-                return;
-            }
-
-            File fileIn = new File(filePath);
-            if (fileIn.isDirectory()) {
-                processDirectory(fileIn, mask);
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].startsWith("-mask-")) {
+                mask = args[i].substring(6);
             } else {
-                processFile(fileIn);
+                filePath = args[i];
             }
+        }
+
+        if (filePath == null) {
+            System.out.println("Usage: file/directory [-mask-[mask]]");
+            return;
+        }
+
+        File fileIn = new File(filePath);
+        if (fileIn.isDirectory()) {
+            processDirectory(fileIn, mask);
+        } else {
+            processFile(fileIn);
+        }
 
     }
 
@@ -118,7 +118,7 @@ public class Test {
                 fileNameToFO += String.format("%-10c%-10d%-10.3f\n", entry.getKey(), entry.getValue(), percentage);
             }
 
-            // 3. Статистика повторения слов
+            // 3 Word repetition statistics
             fileNameToFO += "\nWord repetition statistics:\n";
             fileNameToFO += String.format("%-20s%-10s%-10s\n", "Word", "Quantity", "Prob. %");
             List<Map.Entry<String, Integer>> sortedWords = new ArrayList<>(wordCount.entrySet());
@@ -167,19 +167,6 @@ public class Test {
             }
         }
         return true;
-    }
-
-
-    private static int[] getBOM(String fileType) {
-        int divider, firstBytes;
-        switch (fileType) {
-            case "UTF-32" -> {divider = 4; firstBytes = 4;}
-            case "UTF-16" -> {divider = 2; firstBytes = 2;}
-            case "UTF-8"  -> {divider = 1; firstBytes = 0;}
-            default -> throw new IllegalStateException("Unexpected value: " + fileType);
-        }
-
-        return new int[]{divider, firstBytes};
     }
 
 }
