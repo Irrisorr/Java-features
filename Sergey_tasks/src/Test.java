@@ -10,25 +10,49 @@ import java.util.Map;
 public class Test {
 
     public static void main(String[] args) {
-        try {
-            File fileIn = new File("/home/irrisorr/Desktop/Java-features/Sergey_tasks/FI.txt");
-            String outputFileName = fileIn.getName() + ".stat";
-            File fileOut = new File("/home/irrisorr/Desktop/Java-features/Sergey_tasks/" + outputFileName);
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileIn));
-            FileWriter fileWriter = new FileWriter(fileOut);
+            String filePath = null;
+            String mask = null;
 
-            String fileNameToFO = processFile(fileIn, bufferedReader);
+            for (int i = 0; i < args.length; i++) {
+                if (args[i].startsWith("-mask-")) {
+                    mask = args[i].substring(6);
+                } else {
+                    filePath = args[i];
+                }
+            }
 
-            fileWriter.write(fileNameToFO);
+            if (filePath == null) {
+                System.out.println("Usage: file/directory [-mask-[mask]]");
+                return;
+            }
 
-            bufferedReader.close();
-            fileWriter.close();
-        } catch (Exception e) {}
+            File fileIn = new File(filePath);
+            if (fileIn.isDirectory()) {
+                processDirectory(fileIn, mask);
+            } else {
+                processFile(fileIn);
+            }
 
     }
 
 
-    private static String processFile(File fileIn, BufferedReader bufferedReader) throws IOException {
+    private static void processDirectory(File directory, String mask) {
+        File[] files = directory.listFiles((dir, name) -> mask == null || name.endsWith(mask));
+        for (File file : files) {
+            processFile(file);
+        }
+    }
+
+
+    private static void processFile(File fileIn) {
+
+        try {
+            String outputFileName = fileIn.getName() + ".stat";
+            File fileOut = new File(fileIn.getParent(), outputFileName);
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileIn));
+            FileWriter fileWriter = new FileWriter(fileOut);
+
+
             // 4 Processing time
             long startTime = System.currentTimeMillis();
 
@@ -42,7 +66,7 @@ public class Test {
             byte[] buffer = Files.readAllBytes(fileIn.toPath());
             String fileType;
 
-            if (buffer.length > 0){
+            if (buffer.length > 0) {
                 fileType = determineFileType(buffer);
             } else fileType = "File is empty";
 
@@ -108,7 +132,11 @@ public class Test {
             long duration = endTime - startTime;
             fileNameToFO += String.format("\nProcessing time: %d (msec)\n", duration);
 
-            return fileNameToFO;
+            fileWriter.write(fileNameToFO);
+
+            bufferedReader.close();
+            fileWriter.close();
+        } catch (Exception e) {}
     }
 
 

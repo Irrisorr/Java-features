@@ -1,0 +1,39 @@
+Name of input file: FI.txt
+File size: 58 (bytes)
+File type: UTF-8
+Total chars: 31
+Total words: 7
+
+Character repetition statistics:
+Char      Quantity  Prob. %   
+d         6         19,355    
+а         3         9,677     
+р         2         6,452     
+е         2         6,452     
+к         2         6,452     
+п         2         6,452     
+!         1         3,226     
+a         1         3,226     
+т         1         3,226     
+f         1         3,226     
+ш         1         3,226     
+-         1         3,226     
+в         1         3,226     
+s         1         3,226     
+д         1         3,226     
+и         1         3,226     
+л         1         3,226     
+|         1         3,226     
+?         1         3,226     
+_         1         3,226     
+
+
+Word repetition statistics:
+Word                Quantity  Prob. %   
+ар                  1         14,29     
+как                 1         14,29     
+fsd                 1         14,29     
+пш                  1         14,29     
+привет              1         14,29     
+дела?               1         14,29     
+d!ad|d_d-d          1         14,29     
